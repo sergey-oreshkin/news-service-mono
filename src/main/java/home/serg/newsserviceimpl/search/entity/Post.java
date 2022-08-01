@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class Post {
-    Long id;
-    String sourceName;
-    String title;
-    String description;
-    String link;
-    LocalDateTime date;
+    private Long id;
+    private String sourceName;
+    private String title;
+    private String description;
+    private String link;
+    private LocalDateTime date;
 }

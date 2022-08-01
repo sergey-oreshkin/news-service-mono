@@ -14,6 +14,6 @@ spring:
     enabled: true
 
 app:
-  refresh:
+  request:
     timeout: 200
     period: 300000

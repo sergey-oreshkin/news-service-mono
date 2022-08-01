@@ -56,7 +56,7 @@ public class InMemoryCachedFeedManagerImpl implements FeedManager {
                 .collect(Collectors.toList()));
     }
 
-    @Scheduled(fixedDelayString = "${app.refresh.period}")
+    @Scheduled(fixedDelayString = "${app.request.period}")
     private void refreshNews() {
 
         List<RssSource> rssSources = (List<RssSource>) rssRepository.findAll();
@@ -64,7 +64,7 @@ public class InMemoryCachedFeedManagerImpl implements FeedManager {
 
         posts = (List<Post>) rssSources.parallelStream()
                 .map(RssSource::getLink)
-                .map(feedRequester::feedFromUrl)
+                .map(feedRequester::fetchFeedFromUrl)
                 .filter(Objects::nonNull)
                 .<SyndEntry>flatMap(feed -> feed.getEntries().stream())
                 .map(o -> {

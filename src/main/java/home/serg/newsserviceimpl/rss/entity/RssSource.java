@@ -15,9 +15,9 @@ import javax.persistence.*;
 public class RssSource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @Column(unique = true)
-    String title;
-    String link;
-    Boolean isActive;
+    private String title;
+    private String link;
+    private Boolean isActive;
 }

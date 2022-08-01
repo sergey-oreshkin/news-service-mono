@@ -17,11 +17,11 @@ import java.net.URLConnection;
 @Slf4j
 public class FeedRequesterImpl implements FeedRequester {
 
-    @Value("${app.refresh.timeout}")
+    @Value("${app.request.timeout}")
     private int timeout;
 
     @Override
-    public SyndFeed feedFromUrl(String url) {
+    public SyndFeed fetchFeedFromUrl(String url) {
         try {
             URLConnection conn = new URL(url).openConnection();
             conn.setConnectTimeout(timeout);

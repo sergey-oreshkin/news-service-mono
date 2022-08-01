@@ -4,5 +4,5 @@ import com.sun.syndication.feed.synd.SyndFeed;
 
 public interface FeedRequester {
 
-    SyndFeed feedFromUrl(String url);
+    SyndFeed fetchFeedFromUrl(String url);
 }
