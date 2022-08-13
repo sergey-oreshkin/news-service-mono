@@ -19,7 +19,6 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<PostDto> search(int hours, List<String> keywords) {
         LocalDateTime earliestDate = LocalDateTime.now().minusHours(hours);
-
         return feedManager.getPosts().stream()
                 .filter(p -> p.getDate().isAfter(earliestDate))
                 .filter(p -> {

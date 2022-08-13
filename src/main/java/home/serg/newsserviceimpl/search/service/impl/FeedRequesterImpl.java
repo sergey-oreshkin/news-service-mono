@@ -28,10 +28,10 @@ public class FeedRequesterImpl implements FeedRequester {
             XmlReader reader = new XmlReader(conn);
             return new SyndFeedInput().build(reader);
         } catch (IOException e) {
-            log.warn("failed to connect - " + url + " skipped");
+            log.warn("Failed to connect - " + url + " skipped");
             return null;
         } catch (FeedException | NullPointerException e) {
-            log.warn("failed to parse response from - " + url + " skipped");
+            log.warn("Failed to parse response from - " + url + " skipped");
             return null;
         }
     }
