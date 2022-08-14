@@ -15,6 +15,10 @@ app:
   request:
     timeout: 200
     period: 300000
+  jwt:
+    secret: 92a2a6768af24ba552e6f5550226252f
+    tokenTTL: 100
+    refreshTTL: 1000000
 
 rss:
   sources:

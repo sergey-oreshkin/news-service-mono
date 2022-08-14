@@ -1,4 +1,4 @@
-package home.serg.newsserviceimpl.search.controller;
+package home.serg.newsserviceimpl.search;
 
 import home.serg.newsserviceimpl.search.dto.PostDto;
 import home.serg.newsserviceimpl.search.dto.SearchRequestDto;
