@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <item>
+            <author>example 1</author>
+            <title>title one</title>
+            <link>http://example.com/example1</link>
+            <description>
+                <![CDATA[description example 1 test]]>
+            </description>
+            <pubDate>{date1}</pubDate>
+        </item>
+        <item>
+            <author>example 2</author>
+            <title>title two</title>
+            <link>http://example.com/example2</link>
+            <description>
+                <![CDATA[description example 2 test]]>
+            </description>
+            <pubDate>{date2}</pubDate>
+        </item>
+        <item>
+            <author>example 3</author>
+            <title>title three </title>
+            <link>http://example.com/example3</link>
+            <description>
+                <![CDATA[description example 3 test]]>
+            </description>
+            <pubDate>{date3}</pubDate>
+        </item>
+        <item>
+            <author>example 4</author>
+            <title>title four</title>
+            <link>http://example.com/example4</link>
+            <description>
+                <![CDATA[description example <to be deleted> 4 test]]>
+            </description>
+            <pubDate>{date4}</pubDate>
+        </item>
+    </channel>
+</rss>
