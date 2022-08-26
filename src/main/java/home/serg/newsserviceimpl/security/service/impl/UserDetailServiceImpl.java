@@ -1,7 +1,7 @@
 package home.serg.newsserviceimpl.security.service.impl;
 
-import home.serg.newsserviceimpl.security.entity.UserEntity;
-import home.serg.newsserviceimpl.security.repository.UserRepository;
+import home.serg.newsserviceimpl.security.database.UserEntity;
+import home.serg.newsserviceimpl.security.database.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

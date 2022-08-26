@@ -1,4 +1,4 @@
-package home.serg.newsserviceimpl.security.entity;
+package home.serg.newsserviceimpl.security.database;
 
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -25,6 +25,8 @@ public class UserEntity {
     private String password;
 
     private Date created;
+
+    String lastToken;
 
     @Override
     public boolean equals(Object o) {

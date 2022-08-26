@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class ResponseLogin {
+public class TokenDto {
     String username;
     String token;
     String refresh;

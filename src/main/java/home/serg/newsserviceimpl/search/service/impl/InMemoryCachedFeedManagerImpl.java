@@ -2,8 +2,8 @@ package home.serg.newsserviceimpl.search.service.impl;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import home.serg.newsserviceimpl.rss.DefaultSources;
-import home.serg.newsserviceimpl.rss.entity.RssSource;
-import home.serg.newsserviceimpl.rss.repository.RssRepository;
+import home.serg.newsserviceimpl.rss.database.RssRepository;
+import home.serg.newsserviceimpl.rss.database.RssSource;
 import home.serg.newsserviceimpl.search.dto.PostDto;
 import home.serg.newsserviceimpl.search.entity.Post;
 import home.serg.newsserviceimpl.search.service.FeedManager;

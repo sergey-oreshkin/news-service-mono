@@ -1,12 +1,13 @@
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/news
-    username: postgres
-    password: password
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:news
+    username: dev
+    password: dev
   jpa:
     hibernate:
       ddl-auto: none
+    show-sql: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
@@ -14,7 +15,7 @@ spring:
 app:
   request:
     timeout: 200
-    period: 300000
+    period: 15000
   jwt:
     secret: 92a2a6768af24ba552e6f5550226252f
     tokenTTL: 100

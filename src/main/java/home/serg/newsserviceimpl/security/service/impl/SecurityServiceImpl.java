@@ -1,10 +1,10 @@
 package home.serg.newsserviceimpl.security.service.impl;
 
 import home.serg.newsserviceimpl.exception.UserAlreadyExistException;
-import home.serg.newsserviceimpl.security.dto.ResponseLogin;
-import home.serg.newsserviceimpl.security.entity.UserEntity;
+import home.serg.newsserviceimpl.security.database.UserEntity;
+import home.serg.newsserviceimpl.security.database.UserRepository;
+import home.serg.newsserviceimpl.security.dto.TokenDto;
 import home.serg.newsserviceimpl.security.jwt.JwtTokenProvider;
-import home.serg.newsserviceimpl.security.repository.UserRepository;
 import home.serg.newsserviceimpl.security.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,23 +41,28 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public ResponseLogin getRefresh() {
+    public TokenDto getRefresh() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return getResponseLogin(username);
+        return getResponseLoginAndUpdateRefreshToken(username);
     }
 
     @Override
-    public ResponseLogin getLogin(String username, String password) {
+    public TokenDto getLogin(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        return getResponseLogin(username);
+        return getResponseLoginAndUpdateRefreshToken(username);
     }
 
-    private ResponseLogin getResponseLogin(String username) {
-        return ResponseLogin.builder()
+    private TokenDto getResponseLoginAndUpdateRefreshToken(String username) {
+        String refreshToken = jwtProvider.getNewRefreshToken(username);
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("%s not found", username)));
+        user.setLastToken(refreshToken);
+        userRepository.save(user);
+        return TokenDto.builder()
                 .username(username)
-                .token(jwtProvider.getToken(username))
-                .refresh(jwtProvider.getRefresh(username))
+                .token(jwtProvider.getNewAccessToken(username))
+                .refresh(jwtProvider.getNewRefreshToken(username))
                 .build();
     }
 }

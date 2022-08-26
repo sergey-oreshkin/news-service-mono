@@ -16,9 +16,15 @@ public class ControllerExceptionHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler({AuthenticationException.class, UsernameNotFound.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleAuthenticationException(AuthenticationException ex) {
+    public ErrorResponse handleAuthenticationException(Exception ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(TokenValidationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleAuthenticationException(TokenValidationException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 }

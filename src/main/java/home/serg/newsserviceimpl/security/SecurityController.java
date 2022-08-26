@@ -1,7 +1,7 @@
 package home.serg.newsserviceimpl.security;
 
 import home.serg.newsserviceimpl.security.dto.RequestLogin;
-import home.serg.newsserviceimpl.security.dto.ResponseLogin;
+import home.serg.newsserviceimpl.security.dto.TokenDto;
 import home.serg.newsserviceimpl.security.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,12 +29,12 @@ public class SecurityController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<ResponseLogin> login(@Valid @RequestBody RequestLogin request) {
+    public ResponseEntity<TokenDto> login(@Valid @RequestBody RequestLogin request) {
         return new ResponseEntity<>(service.getLogin(request.getUsername(), request.getPassword()), HttpStatus.OK);
     }
 
     @PostMapping("refresh")
-    public ResponseEntity<ResponseLogin> refresh() {
+    public ResponseEntity<TokenDto> refresh() {
         return new ResponseEntity<>(service.getRefresh(), HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package home.serg.newsserviceimpl.security.jwt;
 
+import home.serg.newsserviceimpl.exception.TokenValidationException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,11 +34,16 @@ public class JwtFilter extends GenericFilterBean {
         if (Objects.nonNull(token))
             try {
                 String username = jwtProvider.getUsernameFromToken(token);
+                if ("/refresh".equals(request.getRequestURI())) {
+                    jwtProvider.validateRefreshToken(token);
+                }
                 UserDetails user = userDetailsService.loadUserByUsername(username);
                 Authentication auth = new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (JwtException ex) {
+            } catch (JwtException | IllegalArgumentException ex) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            } catch (TokenValidationException ex) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
         filterChain.doFilter(request, response);
     }
