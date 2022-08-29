@@ -20,7 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -57,7 +57,7 @@ class FeedManagerTest {
                     "        </item>\n" +
                     "    </channel>\n" +
                     "</rss>",
-            TITLE, LINK, DESCRIPTION, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            TITLE, LINK, DESCRIPTION, ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
 
     @Autowired
     MockMvc mockMvc;
@@ -86,7 +86,7 @@ class FeedManagerTest {
 
 
     @Test
-    void getPosts() throws Exception {
+    void getPosts_shouldFetchPostsFromUrlAndReturnAsJson() throws Exception {
 
         when(rssRepository.findAll()).thenReturn(sources);
 
@@ -99,6 +99,8 @@ class FeedManagerTest {
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(1)))
-                .andExpect(jsonPath("$[0].title", is(TITLE)));
+                .andExpect(jsonPath("$[0].title", is(TITLE)))
+                .andExpect(jsonPath("$[0].desc", is(DESCRIPTION)))
+                .andExpect(jsonPath("$[0].link", is(LINK)));
     }
 }

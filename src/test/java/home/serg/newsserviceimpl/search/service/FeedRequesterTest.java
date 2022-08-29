@@ -68,7 +68,7 @@ class FeedRequesterTest {
             TITLE, LINK, DESCRIPTION);
 
     @Test
-    void fetchFeedFromUrlTest() throws IOException {
+    void fetchFeedFromUrl_shouldReturnParsedFeed() throws IOException {
         SyndFeed feed;
         SyndEntry entry;
 

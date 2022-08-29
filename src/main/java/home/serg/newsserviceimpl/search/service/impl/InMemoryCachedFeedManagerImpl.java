@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class InMemoryCachedFeedManagerImpl implements FeedManager {
                 .collect(Collectors.toList()));
     }
 
-    @Scheduled(fixedDelayString = "${app.request.period}")
+    @Scheduled(fixedDelayString = "${app.request.period}", initialDelay = 200L)
     private void refreshNews() {
         List<RssSource> rssSources = (List<RssSource>) rssRepository.findAll();
 
@@ -72,10 +73,16 @@ public class InMemoryCachedFeedManagerImpl implements FeedManager {
                                             ?
                                             ""
                                             :
-                                            entry.getDescription().getValue().trim().replaceAll("\n|&.{0,};|<.{0,}>", ""
-                                            ))
+                                            entry.getDescription().getValue().trim().replaceAll("\n|&.{0,};|<.{0,}>", "")
+                            )
                             .link(entry.getLink().trim())
-                            .date(entry.getPublishedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                            .date(
+                                    entry.getPublishedDate() == null
+                                            ?
+                                            LocalDateTime.now()
+                                            :
+                                            entry.getPublishedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                            )
                             .build();
                 })
                 .collect(Collectors.toList());
