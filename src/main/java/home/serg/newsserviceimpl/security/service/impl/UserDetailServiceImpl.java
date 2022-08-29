@@ -17,6 +17,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /**
+     * @param username - given username
+     * @return UserDetails for Spring Security
+     * @throws UsernameNotFoundException - when user not found in DB
+     * @see UserDetails
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username)

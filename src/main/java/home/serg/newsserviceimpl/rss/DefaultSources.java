@@ -6,6 +6,9 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 
 import java.util.Map;
 
+/**
+ * DTO for mapping RssSources from file, properties etc.
+ */
 @Value
 @ConstructorBinding
 @ConfigurationProperties(prefix = "rss")

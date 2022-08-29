@@ -21,7 +21,6 @@ public class SearchController {
 
     @PostMapping("/")
     public List<PostDto> search(@Valid @RequestBody SearchRequestDto request) {
-
         return searchService.search(request.getHours(), request.getKeywords());
     }
 }

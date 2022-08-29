@@ -6,6 +6,9 @@ import lombok.Value;
 
 import java.time.LocalDateTime;
 
+/**
+ * DTO for post of news
+ */
 @Value
 @Builder
 public class PostDto {

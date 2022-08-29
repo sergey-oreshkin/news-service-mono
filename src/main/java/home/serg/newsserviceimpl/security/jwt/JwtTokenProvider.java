@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Jwt token processing
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
@@ -27,26 +30,60 @@ public class JwtTokenProvider {
 
     private final UserRepository userRepository;
 
+    /**
+     * Parse token and return subject as username
+     *
+     * @param token - jwt token
+     * @return username
+     * @throws JwtException
+     */
     public String getUsernameFromToken(String token) throws JwtException {
         return getClaims(token).getBody().getSubject();
     }
 
+    /**
+     * Parse token and return type of it
+     *
+     * @param token - jwt token
+     * @return TokenType
+     * @throws JwtException
+     * @throws IllegalArgumentException
+     */
     public TokenType getTypeFromToken(String token) throws JwtException, IllegalArgumentException {
         return TokenType.valueOf(getClaims(token).getBody().get("type", String.class));
     }
 
+    /**
+     * Generate new access token
+     *
+     * @param username - given username
+     * @return generated access token
+     */
     public String getNewAccessToken(String username) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + tokenTtl * 1000);
         return buildToken(username, now, expiration, TokenType.ACCESS);
     }
 
+    /**
+     * Generate new refresh token
+     *
+     * @param username - given username
+     * @return generated refresh token
+     */
     public String getNewRefreshToken(String username) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + refreshTtl * 1000);
         return buildToken(username, now, expiration, TokenType.REFRESH);
     }
 
+    /**
+     * Validate refresh token
+     *
+     * @param token - given token
+     * @throws TokenValidationException  - when type is not refresh or token is not last token
+     * @throws UsernameNotFoundException - when user not found in DB
+     */
     public void validateRefreshToken(String token) {
         if (Objects.isNull(token) || token.isBlank()) {
             throw new TokenValidationException("Token is empty");
