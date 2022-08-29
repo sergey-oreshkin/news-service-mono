@@ -21,9 +21,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final UserDetailsService userDetailsService;
-
-    private final JwtTokenProvider jwtProvider;
+//    private final UserDetailsService userDetailsService;
+//
+//    private final JwtTokenProvider jwtProvider;
+    private final JwtConfigurer jwtConfigurer;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -52,7 +53,7 @@ public class SecurityConfiguration {
                 .antMatchers("/", "/login", "/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer(userDetailsService, jwtProvider));
+                .apply(jwtConfigurer);
         return http.build();
     }
 }

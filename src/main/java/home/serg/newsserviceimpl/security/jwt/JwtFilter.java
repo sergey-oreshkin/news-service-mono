@@ -3,11 +3,13 @@ package home.serg.newsserviceimpl.security.jwt;
 import home.serg.newsserviceimpl.exception.TokenValidationException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -19,8 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
+@Component
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
+
+    @Value("${app.jwt.header")
+    String tokenHeaderName;
 
     private final UserDetailsService userDetailsService;
 
@@ -30,7 +36,7 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader(tokenHeaderName);
         if (Objects.nonNull(token))
             try {
                 String username = jwtProvider.getUsernameFromToken(token);

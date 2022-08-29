@@ -1,6 +1,7 @@
-package home.serg.newsserviceimpl.search.service;
+package home.serg.newsserviceimpl.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import home.serg.newsserviceimpl.integration.annotation.IntegrationTest;
 import home.serg.newsserviceimpl.rss.database.RssRepository;
 import home.serg.newsserviceimpl.rss.database.RssSource;
 import home.serg.newsserviceimpl.search.dto.SearchRequestDto;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
@@ -31,11 +33,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureTestDatabase
+@IntegrationTest
 @ExtendWith(MockitoExtension.class)
-class FeedManagerTest {
+@ActiveProfiles("test")
+class CommonSearchTest {
 
     static final String TITLE = "title one";
 
