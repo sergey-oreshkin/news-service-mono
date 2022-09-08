@@ -19,9 +19,9 @@ public class ControllerExceptionHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler({AuthenticationException.class, UsernameNotFound.class})
+    @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleAuthenticationException(Exception ex) {
+    public ErrorResponse handleAuthenticationException(AuthenticationException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 

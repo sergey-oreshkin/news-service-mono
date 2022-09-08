@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Jwt token processing
@@ -18,6 +19,8 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+
+    public static final int MILLIS_IN_SECOND = 1000;
 
     @Value("${app.jwt.secret}")
     private String secretWord;
@@ -61,7 +64,7 @@ public class JwtTokenProvider {
      */
     public String getNewAccessToken(String username) {
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + tokenTtl * 1000);
+        Date expiration = new Date(now.getTime() + tokenTtl * MILLIS_IN_SECOND);
         return buildToken(username, now, expiration, TokenType.ACCESS);
     }
 
@@ -72,8 +75,9 @@ public class JwtTokenProvider {
      * @return generated refresh token
      */
     public String getNewRefreshToken(String username) {
+        int randomTimeShift = ThreadLocalRandom.current().nextInt(50);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + refreshTtl * 1000);
+        Date expiration = new Date(now.getTime() + (refreshTtl + randomTimeShift) * MILLIS_IN_SECOND);
         return buildToken(username, now, expiration, TokenType.REFRESH);
     }
 

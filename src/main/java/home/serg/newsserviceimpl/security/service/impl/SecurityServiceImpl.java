@@ -62,7 +62,7 @@ public class SecurityServiceImpl implements SecurityService {
         return TokenDto.builder()
                 .username(username)
                 .token(jwtProvider.getNewAccessToken(username))
-                .refresh(jwtProvider.getNewRefreshToken(username))
+                .refresh(refreshToken)
                 .build();
     }
 }

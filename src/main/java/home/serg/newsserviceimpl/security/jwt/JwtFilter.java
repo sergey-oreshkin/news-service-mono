@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -25,7 +26,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
 
-    @Value("${app.jwt.header")
+    @Value("${app.jwt.header}")
     String tokenHeaderName;
 
     private final UserDetailsService userDetailsService;
@@ -40,15 +41,21 @@ public class JwtFilter extends GenericFilterBean {
         if (Objects.nonNull(token))
             try {
                 String username = jwtProvider.getUsernameFromToken(token);
-                if ("/refresh".equals(request.getRequestURI())) {
-                    jwtProvider.validateRefreshToken(token);
+                if (TokenType.REFRESH.equals(jwtProvider.getTypeFromToken(token))) {
+                    if ("/refresh".equals(request.getRequestURI())) {
+                        jwtProvider.validateRefreshToken(token);
+                    } else {
+                        throw new TokenValidationException("Refresh token is not acceptable");
+                    }
+                } else if ("/refresh".equals(request.getRequestURI())) {
+                    throw new TokenValidationException("Access token is not acceptable");
                 }
                 UserDetails user = userDetailsService.loadUserByUsername(username);
                 Authentication auth = new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (JwtException | IllegalArgumentException ex) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            } catch (TokenValidationException ex) {
+            } catch (TokenValidationException | UsernameNotFoundException ex) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
         filterChain.doFilter(request, response);
