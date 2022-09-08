@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/create-rss_sources.yaml
+  - include:
+      file: db/changelog/changeset/create-users.yaml
+  - include:
+      file: db/changelog/changeset/add-last_token-to-users.yaml

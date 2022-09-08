@@ -7,6 +7,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+/**
+ * DTO for search request
+ */
 @Value
 public class SearchRequestDto {
 

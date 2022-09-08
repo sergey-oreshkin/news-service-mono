@@ -1,4 +1,4 @@
-package home.serg.newsserviceimpl.rss.entity;
+package home.serg.newsserviceimpl.rss.database;
 
 import lombok.*;
 import org.hibernate.Hibernate;

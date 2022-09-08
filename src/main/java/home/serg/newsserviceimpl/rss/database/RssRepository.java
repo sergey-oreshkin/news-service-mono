@@ -1,6 +1,5 @@
-package home.serg.newsserviceimpl.rss.repository;
+package home.serg.newsserviceimpl.rss.database;
 
-import home.serg.newsserviceimpl.rss.entity.RssSource;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

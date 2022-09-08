@@ -1,4 +1,4 @@
-package home.serg.newsserviceimpl.search.controller;
+package home.serg.newsserviceimpl.search;
 
 import home.serg.newsserviceimpl.search.dto.PostDto;
 import home.serg.newsserviceimpl.search.dto.SearchRequestDto;
@@ -21,7 +21,6 @@ public class SearchController {
 
     @PostMapping("/")
     public List<PostDto> search(@Valid @RequestBody SearchRequestDto request) {
-
         return searchService.search(request.getHours(), request.getKeywords());
     }
 }
