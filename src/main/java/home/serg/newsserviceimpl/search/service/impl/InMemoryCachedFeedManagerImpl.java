@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -41,19 +40,7 @@ public class InMemoryCachedFeedManagerImpl implements FeedManager {
         return postMapper.toDto(posts);
     }
 
-    @PostConstruct
-    private void saveDefaultSourcesIntoDb() {
-        rssRepository.saveAll(defaultSources.getSources().entrySet().stream()
-                .map((entry) -> RssSource.builder()
-                        .title(entry.getKey())
-                        .link(entry.getValue())
-                        .isActive(true)
-                        .build())
-                .map((source) -> rssRepository.findByTitle(source.getTitle()).orElse(source))
-                .collect(Collectors.toList()));
-    }
-
-    @Scheduled(fixedDelayString = "${app.request.period}", initialDelay = 200L)
+    @Scheduled(fixedDelayString = "${app.request.period}", initialDelayString = "${app.request.delay}")
     private void refreshNews() {
         List<RssSource> rssSources = (List<RssSource>) rssRepository.findAll();
 

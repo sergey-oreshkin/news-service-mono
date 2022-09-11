@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-users
+      id: create-rss_source
       author: Sergey Oreshkin
       changes:
         - createTable:
-            tableName: users
+            tableName: rss_sources
             columns:
               - column:
                   name: id
@@ -13,16 +13,17 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: username
+                  name: title
                   type: varchar(50)
                   constraints:
                     unique: true
+                    nullable: false
               - column:
-                  name: password
+                  name: link
                   type: varchar(256)
                   constraints:
                     nullable: false
               - column:
-                  name: created
-                  type: timestamp
-                  defaultValueComputed: current_timestamp
+                  name: fails_count
+                  type: int
+                  defaultValue: 0

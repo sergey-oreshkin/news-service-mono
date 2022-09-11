@@ -1,10 +1,13 @@
 package home.serg.newsserviceimpl.rss.database;
 
+import home.serg.newsserviceimpl.security.database.UserEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,6 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "rss_sources")
 public class RssSource {
 
     @Id
@@ -23,6 +27,14 @@ public class RssSource {
 
     private String link;
 
+    @ManyToOne
+    @JoinColumn(name = "creator")
+    private UserEntity creator;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "rssSource", cascade = CascadeType.ALL)
+    private Set<UserRss> userRss = new HashSet<>();
+
+    @Transient
     private Boolean isActive;
 
     @Override

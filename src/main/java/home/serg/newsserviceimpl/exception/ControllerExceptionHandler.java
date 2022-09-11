@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(UserAlreadyExistException.class)
+    @ExceptionHandler(NameAlreadyExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleUserAlreadyExistException(UserAlreadyExistException ex) {
+    public ErrorResponse handleUserAlreadyExistException(NameAlreadyExistException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
@@ -28,6 +28,12 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(TokenValidationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleAuthenticationException(TokenValidationException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(NotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 }
