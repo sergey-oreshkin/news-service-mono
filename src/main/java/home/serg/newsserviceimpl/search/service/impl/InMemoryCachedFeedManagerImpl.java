@@ -1,7 +1,6 @@
 package home.serg.newsserviceimpl.search.service.impl;
 
 import com.sun.syndication.feed.synd.SyndEntry;
-import home.serg.newsserviceimpl.rss.DefaultSources;
 import home.serg.newsserviceimpl.rss.database.RssRepository;
 import home.serg.newsserviceimpl.rss.database.RssSource;
 import home.serg.newsserviceimpl.search.dto.PostDto;
@@ -26,8 +25,6 @@ import java.util.stream.Collectors;
 public class InMemoryCachedFeedManagerImpl implements FeedManager {
 
     private List<Post> posts;
-
-    private final DefaultSources defaultSources;
 
     private final RssRepository rssRepository;
 

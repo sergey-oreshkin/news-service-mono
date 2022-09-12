@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,11 @@ public class RssServiceImpl implements RssService {
             rssSource.setCreator(userEntity);
             RssSource sourceEntity = rssRepository.save(rssSource);
             UserRss userRss = UserRss.builder().rssSource(sourceEntity).user(userEntity).isActive(true).build();
-            userEntity.getUserRss().add(userRss);
+            if (userEntity.getUserRss() != null) {
+                userEntity.getUserRss().add(userRss);
+            } else {
+                userEntity.setUserRss(Set.of(userRss));
+            }
             userRepository.save(userEntity);
         } catch (DataIntegrityViolationException ex) {
             throw new NameAlreadyExistException("Rss title already in use");
@@ -55,7 +60,8 @@ public class RssServiceImpl implements RssService {
         RssSource sourceEntity = getRssEntity(rssSource.getTitle());
         if (Objects.equals(rssSource.getIsActive(), sourceEntity.getIsActive())) return;
         UserEntity userEntity = getUserEntity(user);
-        UserRss userRss = userRssRepository.findByUserAndRssSource(userEntity, sourceEntity);
+        UserRss userRss = userRssRepository.findByUserAndRssSource(userEntity, sourceEntity)
+                .orElseThrow(() -> new NotFoundException("Relation not found"));
         userRss.setIsActive(rssSource.getIsActive());
         userRssRepository.save(userRss);
     }
