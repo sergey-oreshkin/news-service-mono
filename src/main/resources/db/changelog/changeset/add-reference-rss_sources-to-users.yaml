@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-reference-rss_sources-to-users
+      author: Sergey Oreshkin
+      changes:
+        - addColumn:
+            tableName: rss_sources
+            columns:
+              - column:
+                  name: creator
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_rss_creator
+                    references: users(id)

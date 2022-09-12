@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-users-rss_sources
+      author: Sergey Oreshkin
+      changes:
+        - createTable:
+            tableName: users_rss_sources
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_rss
+                    references: users(id)
+              - column:
+                  name: rss_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rss_user
+                    references: rss_sources(id)
+              - column:
+                  name: is_active
+                  type: bool
+                  defaultValue: true
+        - addPrimaryKey:
+            tableName: users_rss_sources
+            constraintName: pk_users_rss_sources
+            columnNames: user_id, rss_id

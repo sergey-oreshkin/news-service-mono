@@ -1,13 +1,17 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:news
-    username: dev
-    password: dev
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
@@ -16,41 +20,9 @@ app:
   request:
     timeout: 200
     period: 300000
+    delay: 200
   jwt:
     secret: 92a2a6768af24ba552e6f5550226252f
     tokenTTL: 100
     refreshTTL: 1000000
     header: Authorization
-
-rss:
-  sources:
-    nplus1: 'https://nplus1.ru/rss'
-    garant: 'http://rss.garant.ru/news/'
-    expert: 'https://expert.ru/doc-list/rss/'
-    mail: 'https://news.mail.ru/rss/90/'
-    bbci: 'http://feeds.bbci.co.uk/russian/rss.xml'
-    duma: 'http://duma.gov.ru/news/feed/'
-    esquire: 'https://esquire.ru/out/feedburner.xml'
-    nkj: 'https://www.nkj.ru/rss/'
-    life: 'https://life.ru/xml/feed.xml'
-    popmech: 'https://www.popmech.ru/out/public-all.xml'
-    cnews: 'https://cnews.ru/inc/rss/news.xml'
-    astronews: 'https://astronews.space/?format=feed&type=rss'
-    smartlab: 'https://smart-lab.ru/news/rss/'
-    government: 'http://government.ru/all/rss/'
-    kommersant: 'https://www.kommersant.ru/RSS/section-business.xml'
-    qq: 'https://www.gq.ru/feed/all-content/rss'
-    gazeta: 'https://www.gazeta.ru/export/rss/first.xml'
-    lenta: 'https://lenta.ru/rss'
-    vedomosti: 'https://www.vedomosti.ru/rss/news'
-    agroinvestor: 'https://www.agroinvestor.ru/feed/public-agronews.xml'
-    moex: 'https://www.moex.com/export/news.aspx?cat=100'
-    russian_rt: 'https://russian.rt.com/rss'
-    iz: 'https://iz.ru/xml/rss/all.xml'
-    rbc: 'http://static.feed.rbc.ru/rbc/logical/footer/news.rss'
-    nasa: 'https://www.nasa.gov/rss/dyn/breaking_news.rss'
-    news_yandex: 'https://news.yandex.ru/cosmos.rss'
-    yandex: 'https://news.yandex.ru/index.rss'
-    rg: 'https://rg.ru/tema/ekonomika/rss.xml'
-    vesti: 'https://www.vesti.ru/vesti.rss'
-    forbes: 'https://www.forbes.ru/newrss.xml'

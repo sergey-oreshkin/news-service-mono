@@ -1,6 +1,9 @@
 package home.serg.newsserviceimpl.security.service.impl;
 
-import home.serg.newsserviceimpl.exception.UserAlreadyExistException;
+import home.serg.newsserviceimpl.exception.NameAlreadyExistException;
+import home.serg.newsserviceimpl.rss.database.RssRepository;
+import home.serg.newsserviceimpl.rss.database.RssSource;
+import home.serg.newsserviceimpl.rss.database.UserRss;
 import home.serg.newsserviceimpl.security.database.UserEntity;
 import home.serg.newsserviceimpl.security.database.UserRepository;
 import home.serg.newsserviceimpl.security.dto.TokenDto;
@@ -16,11 +19,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
 
     private final UserRepository userRepository;
+
+    private final RssRepository rssRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -31,12 +40,13 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public void register(String username, String password) {
         try {
-            userRepository.save(UserEntity.builder()
+            UserEntity user = userRepository.save(UserEntity.builder()
                     .username(username)
                     .password(passwordEncoder.encode(password))
                     .build());
+            setDefaultRss(user);
         } catch (DataIntegrityViolationException e) {
-            throw new UserAlreadyExistException("Username already in use");
+            throw new NameAlreadyExistException("Username already in use");
         }
     }
 
@@ -64,5 +74,14 @@ public class SecurityServiceImpl implements SecurityService {
                 .token(jwtProvider.getNewAccessToken(username))
                 .refresh(refreshToken)
                 .build();
+    }
+
+    private void setDefaultRss(UserEntity user) {
+        List<RssSource> rssSources = rssRepository.findAllByCreatorUsername("default");
+        Set<UserRss> userRss = rssSources.stream()
+                .map(rss -> UserRss.builder().rssSource(rss).user(user).isActive(true).build())
+                .collect(Collectors.toSet());
+        user.setUserRss(userRss);
+        userRepository.save(user);
     }
 }

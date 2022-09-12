@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
@@ -32,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
 class CommonSearchTest {
 
     static final String TITLE = "title one";
@@ -81,7 +79,6 @@ class CommonSearchTest {
                 .addHeader("Content-Type", "text/xml; charset=UTF-8"));
         sources = List.of(RssSource.builder().link(baseUrl.toString()).build());
     }
-
 
     @Test
     void getPosts_shouldFetchPostsFromUrlAndReturnAsJson() throws Exception {

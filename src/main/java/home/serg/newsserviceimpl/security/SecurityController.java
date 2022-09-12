@@ -33,7 +33,7 @@ public class SecurityController {
         return new ResponseEntity<>(service.getLogin(request.getUsername(), request.getPassword()), HttpStatus.OK);
     }
 
-    @PostMapping("refresh")
+    @GetMapping("refresh")
     public ResponseEntity<TokenDto> refresh() {
         return new ResponseEntity<>(service.getRefresh(), HttpStatus.OK);
     }

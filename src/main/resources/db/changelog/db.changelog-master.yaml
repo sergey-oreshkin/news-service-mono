@@ -1,7 +1,15 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changeset/create-rss_sources.yaml
+      file: db/changelog/changeset/create-table-rss_sources.yaml
   - include:
-      file: db/changelog/changeset/create-users.yaml
+      file: db/changelog/changeset/create-table-users.yaml
   - include:
       file: db/changelog/changeset/add-last_token-to-users.yaml
+  - include:
+      file: db/changelog/changeset/add-default-user.yaml
+  - include:
+      file: db/changelog/changeset/add-reference-rss_sources-to-users.yaml
+  - include:
+      file: db/changelog/changeset/add-default-rss_sources.sql
+  - include:
+      file: db/changelog/changeset/create-table-users-rss_sources.yaml

@@ -1,6 +1,6 @@
 package home.serg.newsserviceimpl.security.service;
 
-import home.serg.newsserviceimpl.exception.UserAlreadyExistException;
+import home.serg.newsserviceimpl.exception.NameAlreadyExistException;
 import home.serg.newsserviceimpl.security.dto.TokenDto;
 
 public interface SecurityService {
@@ -10,8 +10,8 @@ public interface SecurityService {
      *
      * @param username - Name of the user
      * @param password - Password of the user
-     * @throws UserAlreadyExistException
-     * @see UserAlreadyExistException
+     * @throws NameAlreadyExistException
+     * @see NameAlreadyExistException
      */
     void register(String username, String password);
 

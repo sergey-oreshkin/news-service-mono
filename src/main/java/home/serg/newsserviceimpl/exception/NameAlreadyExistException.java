@@ -3,8 +3,8 @@ package home.serg.newsserviceimpl.exception;
 /**
  * Exception for duplicate username registration fail
  */
-public class UserAlreadyExistException extends RuntimeException {
-    public UserAlreadyExistException(String message) {
+public class NameAlreadyExistException extends RuntimeException {
+    public NameAlreadyExistException(String message) {
         super(message);
     }
 }
