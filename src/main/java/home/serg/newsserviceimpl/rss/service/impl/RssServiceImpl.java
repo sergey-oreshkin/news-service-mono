@@ -1,12 +1,14 @@
-package home.serg.newsserviceimpl.rss.service;
+package home.serg.newsserviceimpl.rss.service.impl;
 
 import home.serg.newsserviceimpl.exception.NameAlreadyExistException;
 import home.serg.newsserviceimpl.exception.NotFoundException;
 import home.serg.newsserviceimpl.rss.database.*;
+import home.serg.newsserviceimpl.rss.service.RssService;
 import home.serg.newsserviceimpl.security.database.UserEntity;
 import home.serg.newsserviceimpl.security.database.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class RssServiceImpl {
+public class RssServiceImpl implements RssService {
 
     private final UserRepository userRepository;
 
@@ -24,9 +26,9 @@ public class RssServiceImpl {
 
     private final UserRssRepository userRssRepository;
 
+    @Override
     public List<RssSource> getByUser(User user) {
         UserEntity userEntity = getUserEntity(user);
-
         return userEntity.getUserRss().stream().map(userRss -> {
             RssSource rss = userRss.getRssSource();
             rss.setIsActive(userRss.getIsActive());
@@ -34,6 +36,7 @@ public class RssServiceImpl {
         }).collect(Collectors.toList());
     }
 
+    @Override
     public void addSource(User user, RssSource rssSource) {
         UserEntity userEntity = getUserEntity(user);
         try {
@@ -47,20 +50,26 @@ public class RssServiceImpl {
         }
     }
 
+    @Override
     public void changeActive(User user, RssSource rssSource) {
-        UserEntity userEntity = getUserEntity(user);
         RssSource sourceEntity = getRssEntity(rssSource.getTitle());
         if (Objects.equals(rssSource.getIsActive(), sourceEntity.getIsActive())) return;
+        UserEntity userEntity = getUserEntity(user);
         UserRss userRss = userRssRepository.findByUserAndRssSource(userEntity, sourceEntity);
         userRss.setIsActive(rssSource.getIsActive());
         userRssRepository.save(userRss);
     }
 
+    @Override
     public void delete(User user, String title) {
         UserEntity userEntity = getUserEntity(user);
         RssSource sourceEntity = getRssEntity(title);
         UserRssId id = UserRssId.builder().userId(userEntity.getId()).rssId(sourceEntity.getId()).build();
-        userRssRepository.deleteById(id);
+        try {
+            userRssRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new NotFoundException("Source not found");
+        }
     }
 
     private UserEntity getUserEntity(User user) {

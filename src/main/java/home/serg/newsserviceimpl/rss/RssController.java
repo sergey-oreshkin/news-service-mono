@@ -2,7 +2,7 @@ package home.serg.newsserviceimpl.rss;
 
 import home.serg.newsserviceimpl.rss.dto.RssSourceDto;
 import home.serg.newsserviceimpl.rss.service.RssMapper;
-import home.serg.newsserviceimpl.rss.service.RssServiceImpl;
+import home.serg.newsserviceimpl.rss.service.RssService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RssController {
 
-    private final RssServiceImpl rssService;
+    private final RssService rssService;
 
     private final RssMapper rssMapper;
 
