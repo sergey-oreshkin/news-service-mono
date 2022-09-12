@@ -23,6 +23,6 @@ app:
     delay: 200
   jwt:
     secret: 92a2a6768af24ba552e6f5550226252f
-    tokenTTL: 1000
+    tokenTTL: 100
     refreshTTL: 1000000
     header: Authorization

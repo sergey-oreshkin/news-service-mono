@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,13 +29,13 @@ public class RssController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> post(@AuthenticationPrincipal User user, @RequestBody RssSourceDto sourceDto) {
+    public ResponseEntity<Void> post(@AuthenticationPrincipal User user, @Valid @RequestBody RssSourceDto sourceDto) {
         rssService.addSource(user, rssMapper.toEntity(sourceDto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping
-    public ResponseEntity<Void> patch(@AuthenticationPrincipal User user, @RequestBody RssSourceDto sourceDto) {
+    public ResponseEntity<Void> patch(@AuthenticationPrincipal User user, @Valid @RequestBody RssSourceDto sourceDto) {
         rssService.changeActive(user, rssMapper.toEntity(sourceDto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -44,6 +45,5 @@ public class RssController {
                                       @PathVariable("title") String title) {
         rssService.delete(user, title);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 }
