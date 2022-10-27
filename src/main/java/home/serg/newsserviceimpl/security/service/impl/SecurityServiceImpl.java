@@ -77,6 +77,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     private void setDefaultRss(UserEntity user) {
+        //TODO ref method to return default rss and save outside this method
         List<RssSource> rssSources = rssRepository.findAllByCreatorUsername("default");
         Set<UserRss> userRss = rssSources.stream()
                 .map(rss -> UserRss.builder().rssSource(rss).user(user).isActive(true).build())

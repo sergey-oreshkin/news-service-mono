@@ -2,6 +2,8 @@ package home.serg.newsserviceimpl.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import home.serg.newsserviceimpl.integration.annotation.IntegrationTest;
+import home.serg.newsserviceimpl.security.database.UserEntity;
+import home.serg.newsserviceimpl.security.database.UserRepository;
 import home.serg.newsserviceimpl.security.dto.RequestLogin;
 import home.serg.newsserviceimpl.security.dto.TokenDto;
 import home.serg.newsserviceimpl.security.jwt.TokenType;
@@ -16,11 +18,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
@@ -44,7 +46,7 @@ public class SecurityTest {
     public static final String LOGIN_URL = "/login";
     public static final String REFRESH_URL = "/refresh";
 
-    public static final int TIME_INTERVAL_MILLIS = 5_000;
+    public static final int TIME_INTERVAL_MILLIS = 50_000;
 
     @Value("${app.jwt.secret}")
     String secretWord;
@@ -59,17 +61,22 @@ public class SecurityTest {
     ObjectMapper mapper;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    UserRepository userRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @BeforeAll
     void init() {
-        jdbcTemplate.update("insert into users(username, password) values(?,?)",
-                VALID_USERNAME,
-                passwordEncoder.encode(VALID_PASSWORD)
-        );
+        System.out.println("****************");
+        List<UserEntity> all = (List<UserEntity>) userRepository.findAll();
+        all.forEach(System.out::println);
+        final UserEntity validUser = UserEntity.builder()
+                .username(VALID_USERNAME)
+                .password(passwordEncoder.encode(VALID_PASSWORD))
+                .build();
+        userRepository.save(validUser);
+
     }
 
     @Test
@@ -152,7 +159,7 @@ public class SecurityTest {
                 .andReturn().getResponse().getContentAsString();
         TokenDto tokenDto = mapper.readValue(json, TokenDto.class);
 
-        mockMvc.perform(post(REFRESH_URL)
+        mockMvc.perform(get(REFRESH_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(tokenHeaderName, tokenDto.getRefresh()))
                 .andExpect(status().isOk())
@@ -185,12 +192,12 @@ public class SecurityTest {
                 .andReturn().getResponse().getContentAsString();
         TokenDto tokenDto = mapper.readValue(json, TokenDto.class);
 
-        mockMvc.perform(post(REFRESH_URL)
+        mockMvc.perform(get(REFRESH_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(tokenHeaderName, tokenDto.getRefresh()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post(REFRESH_URL)
+        mockMvc.perform(get(REFRESH_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(tokenHeaderName, tokenDto.getRefresh()))
                 .andExpect(status().isForbidden());

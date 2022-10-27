@@ -41,8 +41,8 @@ public class RssController {
     }
 
     @DeleteMapping("/{title}")
-    public ResponseEntity<Void> deete(@AuthenticationPrincipal User user,
-                                      @PathVariable("title") String title) {
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal User user,
+                                       @PathVariable("title") String title) {
         rssService.delete(user, title);
         return new ResponseEntity<>(HttpStatus.OK);
     }

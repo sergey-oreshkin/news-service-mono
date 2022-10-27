@@ -8,15 +8,19 @@
         <version>2.7.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>home.serg</groupId>
     <artifactId>news-service-impl</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <name>news-service-impl</name>
     <description>news-service-impl</description>
+
     <properties>
         <java.version>11</java.version>
         <m2e.apt.activation>jdt_apt</m2e.apt.activation>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
