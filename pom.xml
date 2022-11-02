@@ -10,12 +10,11 @@
     </parent>
 
     <groupId>home.serg</groupId>
-    <artifactId>news-service-impl</artifactId>
+    <artifactId>news-service-mono</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>news-service-impl</name>
-    <description>news-service-impl</description>
-
+    <name>news-service-mono</name>
+    <description>News service</description>
     <properties>
         <java.version>11</java.version>
         <m2e.apt.activation>jdt_apt</m2e.apt.activation>

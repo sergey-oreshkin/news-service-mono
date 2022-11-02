@@ -37,13 +37,13 @@ public class InMemoryCachedFeedManagerImpl implements FeedManager {
         return postMapper.toDto(posts);
     }
 
-    @Scheduled(fixedDelayString = "${app.request.period}", initialDelayString = "${app.request.delay}")
+   // @Scheduled(fixedDelayString = "${app.request.period}", initialDelayString = "${app.request.delay}")
     private void refreshNews() {
         List<RssSource> rssSources = (List<RssSource>) rssRepository.findAll();
 
         log.info("Start refreshing news.");
 
-        posts = (List<Post>) rssSources.parallelStream()
+        posts = (List<Post>) rssSources.stream()
                 .map(RssSource::getLink)
                 .map(feedRequester::fetchFeedFromUrl)
                 .filter(Objects::nonNull)
