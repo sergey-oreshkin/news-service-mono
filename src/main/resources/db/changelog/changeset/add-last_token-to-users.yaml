@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-last_token-to-users
+      author: Sergey Oreshkin
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: last_token
+                  type: varchar(256)

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id : add-default-user
+      author: Sergey Oreshkin
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "default"
+              - column:
+                  name: password
+                  value: "default"

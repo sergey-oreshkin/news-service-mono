@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-rss_source
+      author: Sergey Oreshkin
+      changes:
+        - createTable:
+            tableName: rss_sources
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: link
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fails_count
+                  type: int
+                  defaultValue: 0
