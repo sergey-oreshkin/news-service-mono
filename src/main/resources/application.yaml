@@ -1,5 +1,28 @@
 spring:
   datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+app:
+  request:
+    timeout: 200
+    period: 300000
+    delay: 200
+    max-threads: 8
+  jwt:
+    secret: 92a2a6768af24ba552e6f5550226252f
+    tokenTTL: 100
+    refreshTTL: 1000000
+    header: Authorization
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:news
     username: test
@@ -7,22 +30,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
-
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
-    enabled: true
-
-app:
-  request:
-    timeout: 200
-    period: 300000
-    delay: 200
-  jwt:
-    secret: 92a2a6768af24ba552e6f5550226252f
-    tokenTTL: 100
-    refreshTTL: 1000000
-    header: Authorization
