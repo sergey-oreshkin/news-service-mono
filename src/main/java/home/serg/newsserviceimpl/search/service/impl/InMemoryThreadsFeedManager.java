@@ -10,6 +10,7 @@ import home.serg.newsserviceimpl.search.service.FeedManager;
 import home.serg.newsserviceimpl.search.service.FeedRequester;
 import home.serg.newsserviceimpl.search.service.PostMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,6 +34,7 @@ public class InMemoryThreadsFeedManager implements FeedManager {
 
     private final ExecutorService executorService;
 
+    @Autowired
     public InMemoryThreadsFeedManager(List<Post> posts, PostMapper postMapper, RssRepository rssRepository,
                                       FeedRequester feedRequester, @Value("${app.request.max-threads}") int maxTreads) {
         this.posts = posts;
@@ -51,6 +53,7 @@ public class InMemoryThreadsFeedManager implements FeedManager {
     private void refreshNews() {
         List<RssSource> rssSources = (List<RssSource>) rssRepository.findAll();
         log.info("Start refreshing news.");
+
         List<Future<List<Post>>> futures = rssSources.stream()
                 .map(RssSource::getLink)
                 .map(link -> new FeedCallable(link, feedRequester, postMapper))
@@ -64,6 +67,7 @@ public class InMemoryThreadsFeedManager implements FeedManager {
                 return new ArrayList<Post>();
             }
         }).flatMap(Collection::stream).collect(Collectors.toList());
+
         log.info("News refreshed.");
     }
 
