@@ -10,7 +10,6 @@ import home.serg.newsserviceimpl.search.service.FeedRequester;
 import home.serg.newsserviceimpl.search.service.PostMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,7 +36,7 @@ public class InMemoryCachedFeedManagerImpl implements FeedManager {
         return postMapper.toDto(posts);
     }
 
-   // @Scheduled(fixedDelayString = "${app.request.period}", initialDelayString = "${app.request.delay}")
+    // @Scheduled(fixedDelayString = "${app.request.period}", initialDelayString = "${app.request.delay}")
     private void refreshNews() {
         List<RssSource> rssSources = (List<RssSource>) rssRepository.findAll();
 

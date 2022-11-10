@@ -1,5 +1,6 @@
 package home.serg.newsserviceimpl.search.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Value;
@@ -21,4 +22,7 @@ public class PostDto {
     String link;
 
     LocalDateTime date;
+
+    @JsonIgnore
+    String sourceName;
 }
