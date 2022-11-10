@@ -1,10 +1,10 @@
 package home.serg.newsserviceimpl.search.service.impl;
 
 
-import com.sun.syndication.feed.synd.SyndEntry;
 import home.serg.newsserviceimpl.rss.database.RssRepository;
 import home.serg.newsserviceimpl.rss.database.RssSource;
 import home.serg.newsserviceimpl.search.dto.PostDto;
+import home.serg.newsserviceimpl.search.dto.SyndEntryDto;
 import home.serg.newsserviceimpl.search.entity.Post;
 import home.serg.newsserviceimpl.search.service.FeedManager;
 import home.serg.newsserviceimpl.search.service.FeedRequester;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -35,9 +36,9 @@ public class InMemoryThreadsFeedManager implements FeedManager {
     private final ExecutorService executorService;
 
     @Autowired
-    public InMemoryThreadsFeedManager(List<Post> posts, PostMapper postMapper, RssRepository rssRepository,
+    public InMemoryThreadsFeedManager(PostMapper postMapper, RssRepository rssRepository,
                                       FeedRequester feedRequester, @Value("${app.request.max-threads}") int maxTreads) {
-        this.posts = posts;
+        this.posts = new ArrayList<>();
         this.postMapper = postMapper;
         this.rssRepository = rssRepository;
         this.feedRequester = feedRequester;
@@ -54,38 +55,42 @@ public class InMemoryThreadsFeedManager implements FeedManager {
         List<RssSource> rssSources = (List<RssSource>) rssRepository.findAll();
         log.info("Start refreshing news.");
 
-        List<Future<List<Post>>> futures = rssSources.stream()
-                .map(RssSource::getLink)
-                .map(link -> new FeedCallable(link, feedRequester, postMapper))
+        List<Future<SyndEntryDto>> futures = rssSources.stream()
+                .map(source -> new FeedCallable(source, feedRequester))
                 .map(executorService::submit)
                 .collect(Collectors.toList());
 
-        posts = futures.stream().map(future -> {
-            try {
-                return future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                return new ArrayList<Post>();
-            }
-        }).flatMap(Collection::stream).collect(Collectors.toList());
+        posts = futures.stream()
+                .map(future -> {
+                    try {
+                        return future.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .map(s -> postMapper.mapFromEntries(s.getEntries()).stream()
+                        .peek(post -> post.setSourceName(s.getSourceName()))
+                        .collect(Collectors.toList())
+                )
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         log.info("News refreshed.");
     }
 
-    static class FeedCallable implements Callable<List<Post>> {
-        private final String link;
+    static class FeedCallable implements Callable<SyndEntryDto> {
+        private final RssSource source;
         private final FeedRequester feedRequester;
-        private final PostMapper postMapper;
 
-        FeedCallable(String link, FeedRequester feedRequester, PostMapper postMapper) {
-            this.link = link;
+        FeedCallable(RssSource source, FeedRequester feedRequester) {
+            this.source = source;
             this.feedRequester = feedRequester;
-            this.postMapper = postMapper;
         }
 
         @Override
-        public List<Post> call() throws Exception {
-            return postMapper.mapFromEntries((List<SyndEntry>) feedRequester.fetchFeedFromUrl(link).getEntries());
+        public SyndEntryDto call() {
+            return feedRequester.fetchFeedFromSource(source);
         }
     }
-
 }
